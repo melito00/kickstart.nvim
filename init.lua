@@ -242,6 +242,17 @@ require('lazy').setup({
   --
   -- Use `opts = {}` to force a plugin to be loaded.
   --
+  {
+    'keaising/im-select.nvim',
+    config = function()
+      require('im_select').setup {
+        default_im_select = 'com.google.inputmethod.Japanese.Roman',
+      }
+    end,
+  },
+
+  -- "gc" to comment visual regions/lines
+  { 'numToStr/Comment.nvim', opts = {} },
 
   {
     'keaising/im-select.nvim',
