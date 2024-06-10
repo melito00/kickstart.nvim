@@ -806,6 +806,7 @@ require('lazy').setup({
     --
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
     'folke/tokyonight.nvim',
+    enabled = false,
     priority = 1000, -- Make sure to load this before all the other start plugins.
     config = function()
       ---@diagnostic disable-next-line: missing-fields
@@ -822,6 +823,12 @@ require('lazy').setup({
     end,
   },
 
+  {
+    'wadackel/vim-dogrun',
+    init = function()
+      vim.cmd.colorscheme 'dogrun'
+    end,
+  },
   -- Highlight todo, notes, etc in comments
   {
     'folke/todo-comments.nvim',
