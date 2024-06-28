@@ -168,6 +168,11 @@ vim.opt.confirm = true
 
 -- Clear highlights on search when pressing <Esc> in normal mode
 --  See `:help hlsearch`
+vim.o.hlsearch = true
+
+vim.o.tabstop = 2
+vim.o.shiftwidth = 2
+
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 vim.opt.hlsearch = true
 
