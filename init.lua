@@ -801,10 +801,16 @@ require('lazy').setup({
         -- Optionally, set `auto_show = true` to show the documentation after a delay.
         documentation = { auto_show = false, auto_show_delay_ms = 500 },
       },
+          -- Accept ([y]es) the completion.
+          --  This will auto-import if your LSP supports it.
+          --  This will expand snippets if the LSP sent a snippet.
+          -- MARK ['<C-y>'] = cmp.mapping.confirm { select = true },
+          -- MARK ['<C-e>'] = cmp.mapping.abort(),
+          -- ['<C-e>'] = cmp.mapping.close(),
           -- If you prefer more traditional completion keymaps,
           -- you can uncomment the following lines
-          ['<CR>'] = cmp.mapping.confirm { select = true },
-          ['<Tab>'] = cmp.mapping.select_next_item(),
+          -- MARK ['<CR>'] = cmp.mapping.confirm { select = true },
+          -- MARK ['<Tab>'] = cmp.mapping.select_next_item(),
           --['<S-Tab>'] = cmp.mapping.select_prev_item(),
 
       sources = {
