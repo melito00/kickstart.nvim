@@ -743,6 +743,8 @@ require('lazy').setup({
           --  This will auto-import if your LSP supports it.
           --  This will expand snippets if the LSP sent a snippet.
           ['<C-y>'] = cmp.mapping.confirm { select = true },
+          ['<C-e>'] = cmp.mapping.abort(),
+          -- ['<C-e>'] = cmp.mapping.close(),
 
           -- If you prefer more traditional completion keymaps,
           -- you can uncomment the following lines
