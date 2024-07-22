@@ -238,11 +238,7 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
-<<<<<<< HEAD
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
-=======
-if not vim.uv.fs_stat(lazypath) then
->>>>>>> 530c82b (Neovim 0.10 updates (#936))
   local lazyrepo = 'https://github.com/folke/lazy.nvim.git'
   local out = vim.fn.system { 'git', 'clone', '--filter=blob:none', '--branch=stable', lazyrepo, lazypath }
   if vim.v.shell_error ~= 0 then
@@ -538,8 +534,22 @@ require('lazy').setup({
 
       -- `lazydev` configures Lua LSP for your Neovim config, runtime and plugins
       -- used for completion, annotations and signatures of Neovim apis
+<<<<<<< HEAD
       { 'folke/lazydev.nvim', ft = 'lua', opts = {} },
 >>>>>>> 530c82b (Neovim 0.10 updates (#936))
+=======
+      {
+        'folke/lazydev.nvim',
+        ft = 'lua',
+        opts = {
+          library = {
+            -- Load luvit types when the `vim.uv` word is found
+            { path = 'luvit-meta/library', words = { 'vim%.uv' } },
+          },
+        },
+      },
+      { 'Bilal2453/luvit-meta', lazy = true },
+>>>>>>> ce7e7f3 (Update lazydev config to fix "Undefined field `fs_stat`" LSP error (#1040))
     },
     config = function()
       -- Brief aside: **What is LSP?**
