@@ -238,7 +238,11 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
+<<<<<<< HEAD
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
+=======
+if not vim.uv.fs_stat(lazypath) then
+>>>>>>> 530c82b (Neovim 0.10 updates (#936))
   local lazyrepo = 'https://github.com/folke/lazy.nvim.git'
   local out = vim.fn.system { 'git', 'clone', '--filter=blob:none', '--branch=stable', lazyrepo, lazypath }
   if vim.v.shell_error ~= 0 then
@@ -275,8 +279,6 @@ require('lazy').setup({
   --
   -- Use `opts = {}` to force a plugin to be loaded.
   --
-  --  This is equivalent to:
-  --    require('Comment').setup({})
 
   {
     'keaising/im-select.nvim',
@@ -531,6 +533,13 @@ require('lazy').setup({
 
       -- Useful status updates for LSP.
       { 'j-hui/fidget.nvim', opts = {} },
+<<<<<<< HEAD
+=======
+
+      -- `lazydev` configures Lua LSP for your Neovim config, runtime and plugins
+      -- used for completion, annotations and signatures of Neovim apis
+      { 'folke/lazydev.nvim', ft = 'lua', opts = {} },
+>>>>>>> 530c82b (Neovim 0.10 updates (#936))
     },
     config = function()
       -- Brief aside: **What is LSP?**
@@ -581,7 +590,11 @@ require('lazy').setup({
 
           -- Execute a code action, usually your cursor needs to be on top of an error
           -- or a suggestion from your LSP for this to activate.
+<<<<<<< HEAD
           map('gra', vim.lsp.buf.code_action, '[G]oto Code [A]ction', { 'n', 'x' })
+=======
+          map('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
+>>>>>>> 530c82b (Neovim 0.10 updates (#936))
 
           -- WARN: This is not Goto Definition, this is Goto Declaration.
           --  For example, in C this would take you to the header.
@@ -593,7 +606,11 @@ require('lazy').setup({
           --
           -- When you move your cursor, the highlights will be cleared (the second autocommand).
           local client = vim.lsp.get_client_by_id(event.data.client_id)
+<<<<<<< HEAD
           if client and client:supports_method('textDocument/documentHighlight', event.buf) then
+=======
+          if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
+>>>>>>> 530c82b (Neovim 0.10 updates (#936))
             local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
             vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
               buffer = event.buf,
@@ -620,8 +637,15 @@ require('lazy').setup({
           -- code, if the language server you are using supports them
           --
           -- This may be unwanted, since they displace some of your code
+<<<<<<< HEAD
           if client and client:supports_method('textDocument/inlayHint', event.buf) then
             map('<leader>th', function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf }) end, '[T]oggle Inlay [H]ints')
+=======
+          if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint) then
+            map('<leader>th', function()
+              vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf })
+            end, '[T]oggle Inlay [H]ints')
+>>>>>>> 530c82b (Neovim 0.10 updates (#936))
           end
         end,
       })
@@ -828,6 +852,7 @@ require('lazy').setup({
 
       snippets = { preset = 'luasnip' },
 
+<<<<<<< HEAD
       -- Blink.cmp includes an optional, recommended rust fuzzy matcher,
       -- which automatically downloads a prebuilt binary when enabled.
       --
@@ -840,6 +865,23 @@ require('lazy').setup({
       -- Shows a signature help window while you type arguments for a function
       signature = { enabled = true },
     },
+=======
+          -- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
+          --    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
+        },
+        sources = {
+          {
+            name = 'lazydev',
+            -- set group index to 0 to skip loading LuaLS completions as lazydev recommends it
+            group_index = 0,
+          },
+          { name = 'nvim_lsp' },
+          { name = 'luasnip' },
+          { name = 'path' },
+        },
+      }
+    end,
+>>>>>>> 530c82b (Neovim 0.10 updates (#936))
   },
 
   { -- You can easily change to a different colorscheme.
