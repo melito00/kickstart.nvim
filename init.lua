@@ -117,6 +117,7 @@ vim.opt.showmode = false
 vim.schedule(function()
   -- vim.opt.clipboard = 'unnamedplus'
   vim.opt.clipboard = ''
+  vim.cmd [[highlight Normal guibg=NONE]]
 end)
 
 -- Enable break indent
@@ -255,6 +256,8 @@ require('lazy').setup({
   -- "gc" to comment visual regions/lines
   { 'numToStr/Comment.nvim', opts = {} },
 
+  -- for Arm64 Mac :: curl -Ls -o $HOME/bin/im-select https://raw.githubusercontent.com/daipeihust/im-select/master/macOS/out/apple/im-select
+  -- for Intel Mac :: curl -Ls -o $HOME/bin/im-select https://raw.githubusercontent.com/daipeihust/im-select/master/macOS/out/intel/im-select
   {
     'keaising/im-select.nvim',
     config = function()
