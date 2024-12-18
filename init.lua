@@ -117,7 +117,7 @@ vim.opt.showmode = false
 vim.schedule(function()
   -- vim.opt.clipboard = 'unnamedplus'
   vim.opt.clipboard = ''
-  vim.cmd [[highlight Normal guibg=NONE]]
+  vim.cmd [[highlight Normal ctermbg=NONE guibg=NONE]]
 end)
 
 -- Enable break indent
@@ -164,12 +164,12 @@ vim.opt.scrolloff = 5 -- default 0, kickstart set 10
 
 -- Clear highlights on search when pressing <Esc> in normal mode
 --  See `:help hlsearch`
+vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 vim.opt.hlsearch = true
 
 vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
-
-vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
+vim.opt.showtabline = 2
 
 -- Diagnostic keymaps
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
@@ -197,8 +197,17 @@ vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right win
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
+vim.api.nvim_set_keymap('i', '<c-f>', '<esc>A', { noremap = true })
+
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
+-- ファイルタイプが "make" のときに noexpandtab を設定
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'make',
+  callback = function()
+    vim.opt_local.expandtab = false
+  end,
+})
 
 -- Highlight when yanking (copying) text
 --  Try it with `yap` in normal mode
@@ -244,6 +253,13 @@ require('lazy').setup({
   --
   -- Use `opts = {}` to force a plugin to be loaded.
   --
+  -- "gc" to comment visual regions/lines
+  { 'numToStr/Comment.nvim', opts = {} },
+
+  {
+    'vim-denops/denops.vim',
+    lazy = false,
+  },
 
   -- for Arm64 Mac :: curl -Ls -o $HOME/bin/im-select https://raw.githubusercontent.com/daipeihust/im-select/master/macOS/out/apple/im-select
   -- for Intel Mac :: curl -Ls -o $HOME/bin/im-select https://raw.githubusercontent.com/daipeihust/im-select/master/macOS/out/intel/im-select
@@ -255,10 +271,6 @@ require('lazy').setup({
       }
     end,
   },
-
-  -- "gc" to comment visual regions/lines
-  { 'numToStr/Comment.nvim', opts = {} },
-
   -- Here is a more advanced example where we pass configuration
   -- options to `gitsigns.nvim`. This is equivalent to the following Lua:
   --    require('gitsigns').setup({ ... })
@@ -643,6 +655,13 @@ require('lazy').setup({
         -- gopls = {},
         pyright = {},
         rust_analyzer = {},
+        --solargraph = {
+        --  filetypes = { 'ruby' },
+        --},
+        ruby_lsp = {
+          filetypes = { 'ruby' },
+        },
+
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
         -- Some languages (like typescript) have entire language plugins that can be useful:
@@ -803,8 +822,8 @@ require('lazy').setup({
           ['<C-p>'] = cmp.mapping.select_prev_item(),
 
           -- Scroll the documentation window [b]ack / [f]orward
-          ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-          ['<C-f>'] = cmp.mapping.scroll_docs(4),
+          -- ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+          -- ['<C-f>'] = cmp.mapping.scroll_docs(4),
 
           -- Accept ([y]es) the completion.
           --  This will auto-import if your LSP supports it.
