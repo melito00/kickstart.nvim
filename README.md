@@ -87,11 +87,7 @@ git clone https://github.com/nvim-lua/kickstart.nvim.git "%localappdata%\nvim"
 If you're using `powershell.exe`
 
 ```
-<<<<<<< HEAD
 git clone https://github.com/nvim-lua/kickstart.nvim.git "${env:LOCALAPPDATA}\nvim"
-=======
-git clone https://github.com/nvim-lua/kickstart.nvim.git $env:LOCALAPPDATA\nvim\
->>>>>>> 8849336 (Update README.md | %userprofile%\appdata\local -> %localappdata% (#963))
 ```
 
 </details>
