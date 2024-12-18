@@ -117,7 +117,7 @@ vim.o.showmode = false
 vim.schedule(function()
   -- vim.opt.clipboard = 'unnamedplus'
   vim.opt.clipboard = ''
-  vim.cmd [[highlight Normal guibg=NONE]]
+  vim.cmd [[highlight Normal ctermbg=NONE guibg=NONE]]
 end)
 
 -- Enable break indent
@@ -173,12 +173,12 @@ vim.opt.scrolloff = 5 -- default 0, kickstart set 10
 
 -- Clear highlights on search when pressing <Esc> in normal mode
 --  See `:help hlsearch`
+vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 vim.opt.hlsearch = true
 
 vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
-
-vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
+vim.opt.showtabline = 2
 
 -- Diagnostic Config & Keymaps
 -- See :help vim.diagnostic.Opts
@@ -226,9 +226,17 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 -- vim.keymap.set("n", "<C-S-l>", "<C-w>L", { desc = "Move window to the right" })
 -- vim.keymap.set("n", "<C-S-j>", "<C-w>J", { desc = "Move window to the lower" })
 -- vim.keymap.set("n", "<C-S-k>", "<C-w>K", { desc = "Move window to the upper" })
+vim.api.nvim_set_keymap('i', '<c-f>', '<esc>A', { noremap = true })
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
+-- ファイルタイプが "make" のときに noexpandtab を設定
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'make',
+  callback = function()
+    vim.opt_local.expandtab = false
+  end,
+})
 
 -- Highlight when yanking (copying) text
 --  Try it with `yap` in normal mode
@@ -279,6 +287,13 @@ require('lazy').setup({
   --
   -- Use `opts = {}` to force a plugin to be loaded.
   --
+  -- "gc" to comment visual regions/lines
+  { 'numToStr/Comment.nvim', opts = {} },
+
+  {
+    'vim-denops/denops.vim',
+    lazy = false,
+  },
 
   -- for Arm64 Mac :: curl -Ls -o $HOME/bin/im-select https://raw.githubusercontent.com/daipeihust/im-select/master/macOS/out/apple/im-select
   -- for Intel Mac :: curl -Ls -o $HOME/bin/im-select https://raw.githubusercontent.com/daipeihust/im-select/master/macOS/out/intel/im-select
@@ -290,10 +305,6 @@ require('lazy').setup({
       }
     end,
   },
-
-  -- "gc" to comment visual regions/lines
-  { 'numToStr/Comment.nvim', opts = {} },
-
   -- Here is a more advanced example where we pass configuration
   -- options to `gitsigns.nvim`.
   --
@@ -644,8 +655,15 @@ require('lazy').setup({
       local servers = {
         -- clangd = {},
         -- gopls = {},
-        -- pyright = {},
-        -- rust_analyzer = {},
+        pyright = {},
+        rust_analyzer = {},
+        --solargraph = {
+        --  filetypes = { 'ruby' },
+        --},
+        ruby_lsp = {
+          filetypes = { 'ruby' },
+        },
+
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
         -- Some languages (like typescript) have entire language plugins that can be useful:
@@ -809,6 +827,9 @@ require('lazy').setup({
         -- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
         --    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
       },
+          -- Scroll the documentation window [b]ack / [f]orward
+          -- ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+          -- ['<C-f>'] = cmp.mapping.scroll_docs(4),
 
       appearance = {
         -- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
