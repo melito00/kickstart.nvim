@@ -168,6 +168,11 @@ vim.o.cursorline = true
 vim.o.confirm = true
 vim.opt.scrolloff = 5 -- default 0, kickstart set 10
 
+-- if performing an operation that would fail due to unsaved changes in the buffer (like `:q`),
+-- instead raise a dialog asking if you wish to save the current file(s)
+-- See `:help 'confirm'`
+vim.opt.confirm = true
+
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
