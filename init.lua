@@ -176,6 +176,7 @@ vim.opt.scrolloff = 5 -- default 0, kickstart set 10
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 vim.opt.hlsearch = true
 
+vim.opt.expandtab = true
 vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
 vim.opt.showtabline = 2
@@ -196,6 +197,9 @@ vim.diagnostic.config {
   jump = { float = true },
 }
 
+vim.opt.formatoptions:remove { 'r', 'o' }
+
+-- Diagnostic keymaps
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
@@ -238,6 +242,13 @@ vim.api.nvim_create_autocmd('FileType', {
   end,
 })
 
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'rust',
+  callback = function()
+    vim.opt.formatoptions:remove { 'r', 'o' }
+  end,
+})
+
 -- Highlight when yanking (copying) text
 --  Try it with `yap` in normal mode
 --  See `:help vim.hl.on_yank()`
@@ -273,6 +284,8 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
   -- NOTE: Plugins can be added via a link or github org/name. To run setup automatically, use `opts = {}`
   { 'NMAC427/guess-indent.nvim', opts = {} },
+  -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
+  -- 'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
 
   -- Alternatively, use `config = function() ... end` for full control over the configuration.
   -- If you prefer to call `setup` explicitly, use:
@@ -303,6 +316,55 @@ require('lazy').setup({
       require('im_select').setup {
         default_im_select = 'com.google.inputmethod.Japanese.Roman',
       }
+    end,
+  },
+  {
+    'kylechui/nvim-surround',
+    event = 'VeryLazy',
+    config = function()
+      require('nvim-surround').setup {
+        -- Configuration here, or leave empty to use defaults
+      }
+    end,
+  },
+  {
+    'vim-skk/skkeleton',
+    lazy = false,
+    dependencies = { 'vim-denops/denops.vim' },
+    init = function()
+      vim.keymap.set('c', '<C-j>', '<Plug>(skkeleton-enable)')
+      vim.keymap.set('i', '<C-j>', '<Plug>(skkeleton-enable)')
+
+      -- 辞書を探す
+      local dictionaries = {}
+      table.insert(dictionaries, vim.env.HOME .. '/.skkdic/SKK-JISYO-UTF8.L')
+
+      vim.api.nvim_create_autocmd('User', {
+        pattern = 'skkeleton-initialize-pre',
+        callback = function()
+          vim.fn['skkeleton#config'] {
+            eggLikeNewline = true,
+            registerConvertResult = true,
+            globalDictionaries = dictionaries,
+            skkServerResEnc = 'utf-8',
+            skkServerReqEnc = 'utf-8',
+          }
+        end,
+      })
+    end,
+  },
+  {
+    'delphinus/skkeleton_indicator.nvim',
+    lazy = false,
+    dependencies = { 'vim-skk/skkeleton' },
+    config = true,
+  },
+  {
+    'Olical/conjure',
+    ft = { 'clojure' },
+    config = function()
+      require('conjure.main').main()
+      require('conjure.mapping')['on-filetype']()
     end,
   },
   -- Here is a more advanced example where we pass configuration
