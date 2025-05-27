@@ -99,13 +99,13 @@ vim.g.have_nerd_font = true
 --  For more options, you can see `:help option-list`
 
 -- Make line numbers default
-vim.o.number = false
+vim.o.number = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
 -- vim.o.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
-vim.o.mouse = ''
+vim.o.mouse = 'a'
 
 -- Don't show the mode, since it's already in the status line
 vim.o.showmode = false
@@ -161,7 +161,7 @@ vim.o.inccommand = 'split'
 vim.o.cursorline = true
 
 -- Minimal number of screen lines to keep above and below the cursor.
-vim.o.scrolloff = 5 -- default 0, kickstart set 10
+vim.o.scrolloff = 10
 
 -- if performing an operation that would fail due to unsaved changes in the buffer (like `:q`),
 -- instead raise a dialog asking if you wish to save the current file(s)
@@ -173,20 +173,7 @@ vim.o.confirm = true
 
 -- Clear highlights on search when pressing <Esc> in normal mode
 --  See `:help hlsearch`
-vim.o.hlsearch = true
-
-vim.o.tabstop = 2
-vim.o.shiftwidth = 2
-
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
-vim.o.hlsearch = true
-
-vim.o.expandtab = true
-vim.o.tabstop = 2
-vim.o.shiftwidth = 2
-vim.o.showtabline = 2
-
-vim.opt.formatoptions:remove { 'r', 'o' }
 
 -- Diagnostic keymaps
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
@@ -220,7 +207,7 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 -- vim.keymap.set("n", "<C-S-j>", "<C-w>J", { desc = "Move window to the lower" })
 -- vim.keymap.set("n", "<C-S-k>", "<C-w>K", { desc = "Move window to the upper" })
 
-vim.api.nvim_set_keymap('i', '<c-f>', '<esc>A', { noremap = true })
+-- vim.api.nvim_set_keymap('i', '<c-f>', '<esc>A', { noremap = true })
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
@@ -300,73 +287,6 @@ require('lazy').setup({
   --    }
   --
 
-  -- "gc" to comment visual regions/lines
-  { 'numToStr/Comment.nvim', opts = {} },
-
-  {
-    'vim-denops/denops.vim',
-    lazy = false,
-  },
-
-  -- for Arm64 Mac :: curl -Ls -o $HOME/bin/im-select https://raw.githubusercontent.com/daipeihust/im-select/master/macOS/out/apple/im-select
-  -- for Intel Mac :: curl -Ls -o $HOME/bin/im-select https://raw.githubusercontent.com/daipeihust/im-select/master/macOS/out/intel/im-select
-  {
-    'keaising/im-select.nvim',
-    config = function()
-      require('im_select').setup {
-        default_im_select = 'com.google.inputmethod.Japanese.Roman',
-      }
-    end,
-  },
-  {
-    'kylechui/nvim-surround',
-    event = 'VeryLazy',
-    config = function()
-      require('nvim-surround').setup {
-        -- Configuration here, or leave empty to use defaults
-      }
-    end,
-  },
-  {
-    'vim-skk/skkeleton',
-    lazy = false,
-    dependencies = { 'vim-denops/denops.vim' },
-    init = function()
-      vim.keymap.set('c', '<C-j>', '<Plug>(skkeleton-enable)')
-      vim.keymap.set('i', '<C-j>', '<Plug>(skkeleton-enable)')
-
-      -- 辞書を探す
-      local dictionaries = {}
-      table.insert(dictionaries, vim.env.HOME .. '/.skkdic/SKK-JISYO-UTF8.L')
-
-      vim.api.nvim_create_autocmd('User', {
-        pattern = 'skkeleton-initialize-pre',
-        callback = function()
-          vim.fn['skkeleton#config'] {
-            eggLikeNewline = true,
-            registerConvertResult = true,
-            globalDictionaries = dictionaries,
-            skkServerResEnc = 'utf-8',
-            skkServerReqEnc = 'utf-8',
-          }
-        end,
-      })
-    end,
-  },
-  {
-    'delphinus/skkeleton_indicator.nvim',
-    lazy = false,
-    dependencies = { 'vim-skk/skkeleton' },
-    config = true,
-  },
-  {
-    'Olical/conjure',
-    ft = { 'clojure' },
-    config = function()
-      require('conjure.main').main()
-      require('conjure.mapping')['on-filetype']()
-    end,
-  },
   -- Here is a more advanced example where we pass configuration
   -- options to `gitsigns.nvim`.
   --
@@ -779,9 +699,6 @@ require('lazy').setup({
         -- gopls = {},
         pyright = {},
         rust_analyzer = {},
-        --solargraph = {
-        --  filetypes = { 'ruby' },
-        --},
         ruby_lsp = {
           filetypes = { 'ruby' },
         },
@@ -1010,12 +927,6 @@ require('lazy').setup({
     end,
   },
 
-  {
-    'wadackel/vim-dogrun',
-    init = function()
-      vim.cmd.colorscheme 'dogrun'
-    end,
-  },
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
 
@@ -1092,7 +1003,7 @@ require('lazy').setup({
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
   -- require 'kickstart.plugins.debug',
-  require 'kickstart.plugins.indent_line',
+  -- require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
   require 'kickstart.plugins.autopairs',
   -- require 'kickstart.plugins.neo-tree',
@@ -1102,7 +1013,7 @@ require('lazy').setup({
   --    This is the easiest way to modularize your config.
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
   --
   -- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
   -- Or use telescope!
@@ -1129,6 +1040,8 @@ require('lazy').setup({
     },
   },
 })
+
+require 'custom.options'
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
