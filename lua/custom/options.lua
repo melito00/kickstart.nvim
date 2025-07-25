@@ -13,3 +13,4 @@ vim.o.showtabline = 2
 vim.opt.formatoptions:remove { 'r', 'o' }
 
 vim.api.nvim_set_keymap('i', '<c-f>', '<esc>A', { noremap = true })
+vim.api.nvim_set_keymap('n', '<leader>ff', '<cmd>Telescope find_files<cr>', { noremap = true, silent = true })
