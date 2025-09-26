@@ -713,7 +713,14 @@ require('lazy').setup({
         pyright = {},
         rust_analyzer = {},
         ruby_lsp = {
+          mason = false,
           filetypes = { 'ruby' },
+          cmd = { vim.fn.expand ' ~/.local/share/mise/installs/ruby/latest/bin/ruby-lsp' },
+        },
+        rubocop = {
+          mason = false,
+          filetypes = { 'ruby' },
+          cmd = { vim.fn.expand ' ~/.local/share/mise/installs/ruby/latest/bin/rubocop', '--lsp' },
         },
 
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
