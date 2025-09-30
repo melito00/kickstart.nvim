@@ -64,5 +64,12 @@ return {
       end,
       desc = 'Git Status',
     },
+    {
+      '<leader>n',
+      function()
+        Snacks.picker.notifications()
+      end,
+      desc = 'Notification History',
+    },
   },
 }
