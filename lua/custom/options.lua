@@ -16,3 +16,6 @@ vim.api.nvim_set_keymap('i', '<c-f>', '<esc>A', { noremap = true })
 vim.api.nvim_set_keymap('n', '<leader>ff', '<cmd>Telescope find_files<cr>', { noremap = true, silent = true })
 
 vim.g.snacks_animate = false
+
+vim.opt.diffopt:append 'algorithm:patience'
+vim.opt.diffopt:append 'indent-heuristic'
