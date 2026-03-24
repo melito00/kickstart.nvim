@@ -162,10 +162,6 @@ vim.o.cursorline = true
 
 -- Minimal number of screen lines to keep above and below the cursor.
 
--- if performing an operation that would fail due to unsaved changes in the buffer (like `:q`),
--- instead raise a dialog asking if you wish to save the current file(s)
--- See `:help 'confirm'`
-vim.o.confirm = true
 vim.opt.scrolloff = 5 -- default 0, kickstart set 10
 
 -- if performing an operation that would fail due to unsaved changes in the buffer (like `:q`),
@@ -179,12 +175,14 @@ vim.o.confirm = true
 -- Clear highlights on search when pressing <Esc> in normal mode
 --  See `:help hlsearch`
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
-vim.o.hlsearch = true
 
+vim.o.hlsearch = true
 vim.o.expandtab = true
 vim.o.tabstop = 2
 vim.o.shiftwidth = 2
 vim.o.showtabline = 2
+
+vim.opt.formatoptions:remove { 'r', 'o' }
 
 -- Diagnostic Config & Keymaps
 -- See :help vim.diagnostic.Opts
@@ -201,8 +199,6 @@ vim.diagnostic.config {
   -- Auto open the float, so you can easily read the errors when jumping with `[d` and `]d`
   jump = { float = true },
 }
-
-vim.opt.formatoptions:remove { 'r', 'o' }
 
 -- Diagnostic keymaps
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
@@ -235,25 +231,21 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 -- vim.keymap.set("n", "<C-S-l>", "<C-w>L", { desc = "Move window to the right" })
 -- vim.keymap.set("n", "<C-S-j>", "<C-w>J", { desc = "Move window to the lower" })
 -- vim.keymap.set("n", "<C-S-k>", "<C-w>K", { desc = "Move window to the upper" })
-vim.api.nvim_set_keymap('i', '<c-f>', '<esc>A', { noremap = true })
 
--- vim.api.nvim_set_keymap('i', '<c-f>', '<esc>A', { noremap = true })
+vim.api.nvim_set_keymap('i', '<c-f>', '<esc>A', { noremap = true })
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
+
 -- ファイルタイプが "make" のときに noexpandtab を設定
 vim.api.nvim_create_autocmd('FileType', {
   pattern = 'make',
-  callback = function()
-    vim.opt_local.expandtab = false
-  end,
+  callback = function() vim.opt_local.expandtab = false end,
 })
 
 vim.api.nvim_create_autocmd('FileType', {
   pattern = 'rust',
-  callback = function()
-    vim.opt.formatoptions:remove { 'r', 'o' }
-  end,
+  callback = function() vim.opt.formatoptions:remove { 'r', 'o' } end,
 })
 
 -- Highlight when yanking (copying) text
@@ -271,9 +263,7 @@ local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
   local lazyrepo = 'https://github.com/folke/lazy.nvim.git'
   local out = vim.fn.system { 'git', 'clone', '--filter=blob:none', '--branch=stable', lazyrepo, lazypath }
-  if vim.v.shell_error ~= 0 then
-    error('Error cloning lazy.nvim:\n' .. out)
-  end
+  if vim.v.shell_error ~= 0 then error('Error cloning lazy.nvim:\n' .. out) end
 end
 
 ---@type vim.Option
@@ -294,9 +284,6 @@ rtp:prepend(lazypath)
 require('lazy').setup({
   -- NOTE: Plugins can be added via a link or github org/name. To run setup automatically, use `opts = {}`
   { 'NMAC427/guess-indent.nvim', opts = {} },
-  -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
-  'NMAC427/guess-indent.nvim', -- Detect tabstop and shiftwidth automatically
-  -- 'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
 
   -- Alternatively, use `config = function() ... end` for full control over the configuration.
   -- If you prefer to call `setup` explicitly, use:
@@ -378,16 +365,6 @@ require('lazy').setup({
         { 'gr', group = 'LSP Actions', mode = { 'n' } },
       },
     },
---      require('which-key').add {
---        { '<leader>c', group = '[C]ode' },
---        { '<leader>d', group = '[D]ocument' },
---        { '<leader>r', group = '[R]ename' },
---        { '<leader>s', group = '[S]earch' },
---        { '<leader>w', group = '[W]orkspace' },
---        { '<leader>t', group = '[T]oggle' },
---        { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
---      }
---    end,
   },
 
   -- NOTE: Plugins can specify dependencies.
@@ -570,9 +547,6 @@ require('lazy').setup({
 
       -- Useful status updates for LSP.
       { 'j-hui/fidget.nvim', opts = {} },
-
-      -- Allows extra capabilities provided by blink.cmp
-      'saghen/blink.cmp',
     },
     config = function()
       -- Brief aside: **What is LSP?**
@@ -667,41 +641,6 @@ require('lazy').setup({
           end
         end,
       })
-
-      -- Diagnostic Config
-      -- See :help vim.diagnostic.Opts
-      vim.diagnostic.config {
-        severity_sort = true,
-        float = { border = 'rounded', source = 'if_many' },
-        underline = { severity = vim.diagnostic.severity.ERROR },
-        signs = vim.g.have_nerd_font and {
-          text = {
-            [vim.diagnostic.severity.ERROR] = '󰅚 ',
-            [vim.diagnostic.severity.WARN] = '󰀪 ',
-            [vim.diagnostic.severity.INFO] = '󰋽 ',
-            [vim.diagnostic.severity.HINT] = '󰌶 ',
-          },
-        } or {},
-        virtual_text = {
-          source = 'if_many',
-          spacing = 2,
-          format = function(diagnostic)
-            local diagnostic_message = {
-              [vim.diagnostic.severity.ERROR] = diagnostic.message,
-              [vim.diagnostic.severity.WARN] = diagnostic.message,
-              [vim.diagnostic.severity.INFO] = diagnostic.message,
-              [vim.diagnostic.severity.HINT] = diagnostic.message,
-            }
-            return diagnostic_message[diagnostic.severity]
-          end,
-        },
-      }
-
-      -- LSP servers and clients are able to communicate to each other what features they support.
-      --  By default, Neovim doesn't support everything that is in the LSP specification.
-      --  When you add blink.cmp, luasnip, etc. Neovim now has *more* capabilities.
-      --  So, we create new capabilities with blink.cmp, and then broadcast that to the servers.
-      local capabilities = require('blink.cmp').get_lsp_capabilities()
 
       -- Enable the following language servers
       --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
@@ -881,14 +820,24 @@ require('lazy').setup({
         -- <c-k>: Toggle signature help
         --
         -- See :h blink-cmp-config-keymap for defining your own keymap
+
+        -- Accept ([y]es) the completion.
+        --  This will auto-import if your LSP supports it.
+        --  This will expand snippets if the LSP sent a snippet.
+        -- MARK ['<C-y>'] = cmp.mapping.confirm { select = true },
+        -- MARK ['<C-e>'] = cmp.mapping.abort(),
+        -- ['<C-e>'] = cmp.mapping.close(),
+        -- If you prefer more traditional completion keymaps,
+        -- you can uncomment the following lines
+        -- MARK ['<CR>'] = cmp.mapping.confirm { select = true },
+        -- MARK ['<Tab>'] = cmp.mapping.select_next_item(),
+        --['<S-Tab>'] = cmp.mapping.select_prev_item(),
+
         preset = 'default',
 
         -- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
         --    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
       },
-          -- Scroll the documentation window [b]ack / [f]orward
-          -- ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-          -- ['<C-f>'] = cmp.mapping.scroll_docs(4),
 
       appearance = {
         -- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
@@ -901,17 +850,6 @@ require('lazy').setup({
         -- Optionally, set `auto_show = true` to show the documentation after a delay.
         documentation = { auto_show = false, auto_show_delay_ms = 500 },
       },
-          -- Accept ([y]es) the completion.
-          --  This will auto-import if your LSP supports it.
-          --  This will expand snippets if the LSP sent a snippet.
-          -- MARK ['<C-y>'] = cmp.mapping.confirm { select = true },
-          -- MARK ['<C-e>'] = cmp.mapping.abort(),
-          -- ['<C-e>'] = cmp.mapping.close(),
-          -- If you prefer more traditional completion keymaps,
-          -- you can uncomment the following lines
-          -- MARK ['<CR>'] = cmp.mapping.confirm { select = true },
-          -- MARK ['<Tab>'] = cmp.mapping.select_next_item(),
-          --['<S-Tab>'] = cmp.mapping.select_prev_item(),
 
       sources = {
         default = { 'lsp', 'path', 'snippets' },
