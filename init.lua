@@ -623,14 +623,12 @@ require('lazy').setup({
           cmd = { vim.fn.expand ' ~/.local/share/mise/installs/ruby/latest/bin/rubocop', '--lsp' },
         },
 
-        -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
         -- Some languages (like typescript) have entire language plugins that can be useful:
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`tsserver`) will work just fine
         -- tsserver = {},
-        --
 
         stylua = {}, -- Used to format Lua code
 
@@ -782,22 +780,14 @@ require('lazy').setup({
         --
         -- See :h blink-cmp-config-keymap for defining your own keymap
 
-        -- Accept ([y]es) the completion.
-        --  This will auto-import if your LSP supports it.
-        --  This will expand snippets if the LSP sent a snippet.
-        -- MARK ['<C-y>'] = cmp.mapping.confirm { select = true },
-        -- MARK ['<C-e>'] = cmp.mapping.abort(),
-        -- ['<C-e>'] = cmp.mapping.close(),
-        -- If you prefer more traditional completion keymaps,
-        -- you can uncomment the following lines
-        -- MARK ['<CR>'] = cmp.mapping.confirm { select = true },
-        -- MARK ['<Tab>'] = cmp.mapping.select_next_item(),
-        --['<S-Tab>'] = cmp.mapping.select_prev_item(),
-
         preset = 'default',
 
         -- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
         --    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
+        ['<C-y>'] = { 'accept', 'fallback' },
+        ['<C-e>'] = { 'cancel', 'fallback' },
+        ['<CR>'] = { 'accept', 'fallback' },
+        ['<Tab>'] = { 'select_next', 'fallback' },
       },
 
       appearance = {
