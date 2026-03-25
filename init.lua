@@ -161,8 +161,7 @@ vim.o.inccommand = 'split'
 vim.o.cursorline = true
 
 -- Minimal number of screen lines to keep above and below the cursor.
-
-vim.opt.scrolloff = 5 -- default 0, kickstart set 10
+vim.o.scrolloff = 10
 
 -- if performing an operation that would fail due to unsaved changes in the buffer (like `:q`),
 -- instead raise a dialog asking if you wish to save the current file(s)
@@ -175,14 +174,6 @@ vim.o.confirm = true
 -- Clear highlights on search when pressing <Esc> in normal mode
 --  See `:help hlsearch`
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
-
-vim.o.hlsearch = true
-vim.o.expandtab = true
-vim.o.tabstop = 2
-vim.o.shiftwidth = 2
-vim.o.showtabline = 2
-
-vim.opt.formatoptions:remove { 'r', 'o' }
 
 -- Diagnostic Config & Keymaps
 -- See :help vim.diagnostic.Opts
@@ -200,7 +191,6 @@ vim.diagnostic.config {
   jump = { float = true },
 }
 
--- Diagnostic keymaps
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
@@ -232,21 +222,8 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 -- vim.keymap.set("n", "<C-S-j>", "<C-w>J", { desc = "Move window to the lower" })
 -- vim.keymap.set("n", "<C-S-k>", "<C-w>K", { desc = "Move window to the upper" })
 
-vim.api.nvim_set_keymap('i', '<c-f>', '<esc>A', { noremap = true })
-
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
-
--- ファイルタイプが "make" のときに noexpandtab を設定
-vim.api.nvim_create_autocmd('FileType', {
-  pattern = 'make',
-  callback = function() vim.opt_local.expandtab = false end,
-})
-
-vim.api.nvim_create_autocmd('FileType', {
-  pattern = 'rust',
-  callback = function() vim.opt.formatoptions:remove { 'r', 'o' } end,
-})
 
 -- Highlight when yanking (copying) text
 --  Try it with `yap` in normal mode
@@ -296,21 +273,6 @@ require('lazy').setup({
   --        end,
   --    }
   --
-  -- Use `opts = {}` to automatically pass options to a plugin's `setup()` function, forcing the plugin to be loaded.
-  --
-
-  -- Alternatively, use `config = function() ... end` for full control over the configuration.
-  -- If you prefer to call `setup` explicitly, use:
-  --    {
-  --        'lewis6991/gitsigns.nvim',
-  --        config = function()
-  --            require('gitsigns').setup({
-  --                -- Your gitsigns configuration here
-  --            })
-  --        end,
-  --    }
-  --
-
   -- Here is a more advanced example where we pass configuration
   -- options to `gitsigns.nvim`.
   --
@@ -353,7 +315,6 @@ require('lazy').setup({
     ---@diagnostic disable-next-line: missing-fields
     opts = {
       -- delay between pressing a key and opening which-key (milliseconds)
-      -- this setting is independent of vim.o.timeoutlen
       delay = 0,
       icons = { mappings = vim.g.have_nerd_font },
 
